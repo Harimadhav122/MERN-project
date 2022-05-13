@@ -1,22 +1,35 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
+const validator = require("validator");
 
 const employeeSchema = new mongoose.Schema({
-    empId: {
-        type: Number,
-        required: true
-    },
-    empName: {
+    _id: Number,
+    name: {
         type: String,
-        required: true
+        required: true,
+        validate(value){
+            if(!validator.isAlpha(value)){
+                throw new Error("Name should contain characters only");
+            }
+        }
     },
-    empProject: {
+    project: {
         type: String,
-        required: true
+        required: true,
+        validate(value){
+            if(!validator.isAlpha(value)){
+                throw new Error("Project name should contain characters only");
+            }
+        }
     },
-    empTeam: {
+    team: {
         type: String,
-        required: true
+        required: true,
+        validate(value){
+            if(!validator.isAlphanumeric(value)){
+                throw new Error("Team name should contain characters and numbers only");
+            }
+        }
     }
 })
 
-module.exports = mongoose.model("Employees", employeeSchema)
+module.exports = mongoose.model("Employees", employeeSchema);
