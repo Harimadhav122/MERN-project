@@ -1,12 +1,16 @@
 const express = require("express");
 const Employees = require("../models/employees");
-const Sequence = require("../models/sequence");
+const getSequence = require("../models/sequence");
 const {check, validationResult} = require("express-validator");
 const router = express.Router();
 router.get("/", async(req, res) => {
     try{
         const emp = await Employees.find();
-        res.json(emp);
+        if(emp.length>0){
+            res.json(emp);
+        }else{
+            res.send("No data");
+        }
     }catch(err){
         res.send(err);
     }
@@ -65,11 +69,11 @@ router.get("/searchEmployee", [
 
 router.post("/addEmployee", async(req, res) => {
     var id;
-    await Sequence.getSequence("employeeId")
+    await getSequence.getSequence("employeeId")
     .then(sequence =>{
         id = sequence
     })
-    .catch(error => console.log(error))
+    .catch(error => console.log(error));
     const emp = new Employees({
         _id: id,
         name: req.body.name,

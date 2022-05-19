@@ -1,17 +1,25 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const sequenceSchema = new mongoose.Schema({
     _id: {
         type: String,
-        required: true
+        required: true,
+        validate(value){
+            if(!validator.isAlpha(value)){
+                throw new Error("Id should contain characters only");
+            }
+        }
     },
     seq: {
         type: Number,
         required: true
     }
 })
-const Sequence = mongoose.model("Sequence", sequenceSchema)
 
+module.exports.Sequence = mongoose.model("Sequence", sequenceSchema);
+
+const Sequence = mongoose.model("Sequence", sequenceSchema);
 const getSequence = async(seqName) => {
     return new Promise((resolve, reject) => {
         Sequence.findOneAndUpdate(
@@ -32,7 +40,4 @@ const getSequence = async(seqName) => {
     
 }
 
-module.exports = {
-    Sequence,
-    getSequence
-}
+module.exports.getSequence = getSequence;
